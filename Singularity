@@ -1,6 +1,26 @@
 Bootstrap: docker
 From: nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 
+%environment
+
+	#Use bash as default shell
+	SHELL=/bin/bash
+
+	#Add nvidia driver paths
+
+	PATH="/nvbin:$PATH"
+	LD_LIBRARY_PATH="/nvlib:$LD_LIBRARY_PATH"
+
+	#Add CUDA paths
+
+	CPATH="/usr/local/cuda/include:$CPATH"
+	PATH="/usr/local/cuda/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda"
+
+	export PATH LD_LIBRARY_PATH CPATH CUDA_HOME
+
+
 %setup
 	#Runs on host
 	#The path to the image is $SINGULARITY_ROOTFS
@@ -10,30 +30,11 @@ From: nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 %post
 	#Post setup script
 
-	#Use bash as default shell
-	echo "\n #Using bash as default shell \n" >> /environment
-	echo 'SHELL=/bin/bash' >> /environment
-
-	#Make environment file executable
-	chmod +x /environment
-
 	#Default mount paths
 	mkdir /scratch /data /shared /fastdata
 
 	#Nvidia Library mount paths
 	mkdir /nvlib /nvbin
-
-	#Add nvidia driver paths
-	echo "\n #Nvidia driver paths \n" >> /environment
-	echo 'export PATH="/nvbin:$PATH"' >> /environment
-	echo 'export LD_LIBRARY_PATH="/nvlib:$LD_LIBRARY_PATH"' >> /environment
-
-	#Add CUDA paths
-	echo "\n #Cuda paths \n" >> /environment
-	echo 'export CPATH="/usr/local/cuda/include:$CPATH"' >> /environment
-	echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> /environment
-	echo 'export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"' >> /environment
-	echo 'export CUDA_HOME="/usr/local/cuda"' >> /environment
 
   #Updating and getting required packages
   apt-get update
