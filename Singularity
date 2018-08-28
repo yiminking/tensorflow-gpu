@@ -8,6 +8,10 @@ From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 	#Use bash as default shell
 	SHELL=/bin/bash
 
+	#Add nvidia driver paths
+	PATH="/nvbin:$PATH"
+	LD_LIBRARY_PATH="/nvlib;$LD_LIBRARY_PATH"
+
 	#Add CUDA paths
 	CPATH="/usr/local/cuda/include:$CPATH"
 	PATH="/usr/local/cuda/bin:$PATH"
@@ -18,6 +22,7 @@ From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 	PATH="/usr/local/anaconda3-4.2.0/bin:$PATH"
 
 	export PATH LD_LIBRARY_PATH CPATH CUDA_HOME
+
 
 %setup
 	#Runs on host
@@ -34,6 +39,8 @@ From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 	#Default mount paths
 	mkdir /scratch /data /shared /fastdata
 
+	#Nvidia Library mount paths
+	mkdir /nvlib /nvbin
 
   #Updating and getting required packages
   apt-get update
@@ -49,9 +56,11 @@ From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
   chmod +x Anaconda3-4.2.0-Linux-x86_64.sh
   ./Anaconda3-4.2.0-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH
 
+	pip install -U pip
 
   #Install Tensorflow
-  pip install tensorflow-gpu
+  TF_PYTHON_URL="https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.9.0-cp35-cp35m-linux_x86_64.whl"
+  pip install --ignore-installed --upgrade $TF_PYTHON_URL
 
 	#Install Keras
 	pip install keras
@@ -64,4 +73,8 @@ From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 %test
 	#Test that script is a success
 
-	
+	#Load environment variables
+	#. /environment
+
+	#Test tensorflow install
+	#python -c "import tensorflow"
