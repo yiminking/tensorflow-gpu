@@ -6,3 +6,9 @@
     * What OS packages are installed
     * What environment variables are set
 * See the [Singularity](http://singularity.lbl.gov/) project website for more info on Singularity in general and detailed documentaiton.
+
+# Additional info
+1. Install singularity
+2. Add packages you need in the file Singularity
+3. Run build.sh in terminal
+4. Upload the produced image to JADE/ShARC
